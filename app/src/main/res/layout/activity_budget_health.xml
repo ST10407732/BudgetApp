@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212"
+    android:padding="16dp">
+
+    <!-- Scrollable content wrapper -->
+    <ScrollView
+        android:id="@+id/contentScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNavigation"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Spent Text -->
+            <TextView
+                android:id="@+id/tvSpent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Spent: R0"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Remaining Text -->
+            <TextView
+                android:id="@+id/tvRemaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remaining: R0"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Projected Overspending Text -->
+            <TextView
+                android:id="@+id/tvProjected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Projected Overspending: R0"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Budget Status -->
+            <TextView
+                android:id="@+id/statusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Budget Status: Healthy"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Progress Bar -->
+            <ProgressBar
+                android:id="@+id/budgetHealthProgressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:progress="0"
+                android:progressTint="#00FF00"
+                android:backgroundTint="#FFFFFF"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- Horizontal Bar Chart -->
+            <com.github.mikephil.charting.charts.HorizontalBarChart
+                android:id="@+id/horizontalBarChart"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginBottom="16dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/orange"
+        app:itemIconTint="@color/selector_nav_item_color"
+        app:itemTextColor="@color/selector_nav_item_color"
+        app:menu="@menu/bottom_navigation_menu" />
+
+</RelativeLayout>

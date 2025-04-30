@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    tools:context=".DashboardActivity">
+
+    <!-- ScrollView -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        android:layout_marginBottom="56dp">
+
+        <!-- Inner LinearLayout inside ScrollView -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tvDashboardTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Savora Dashboard"
+                android:textColor="#FFA500"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_margin="16dp"/>
+
+            <!-- Budget Health Section -->
+            <LinearLayout
+                android:id="@+id/budgetHealthLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tvSpent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Spent: $0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvRemaining"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Remaining: $0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvProjected"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Projected Overspending: $0"
+                    android:textColor="#FFA500"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <ProgressBar
+                    android:id="@+id/budgetHealthProgressBar"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:max="100"
+                    android:progress="50"
+                    android:progressTint="#FFA500" />
+
+                <TextView
+                    android:id="@+id/statusTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Budget Status: Healthy"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"/>
+
+            </LinearLayout>
+
+            <!-- Horizontal Bar Chart -->
+            <com.github.mikephil.charting.charts.HorizontalBarChart
+                android:id="@+id/horizontalBarChart"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="16dp" />
+
+            <!-- Horizontal Bar Legend -->
+            <LinearLayout
+                android:id="@+id/barChartLegend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="8dp">
+                <!-- Add colored boxes and labels dynamically from code -->
+            </LinearLayout>
+
+            <!-- Pie Chart -->
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="16dp" />
+
+            <!-- Pie Chart Legend -->
+            <LinearLayout
+                android:id="@+id/legendLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
+                <!-- Add legends dynamically -->
+            </LinearLayout>
+
+            <!-- Buttons -->
+            <Button
+                android:id="@+id/btnAddExpense"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Expense"
+                android:layout_marginTop="16dp" />
+
+            <Button
+                android:id="@+id/btnViewExpenses"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View Expenses"
+                android:layout_marginTop="8dp" />
+
+            <Button
+                android:id="@+id/btnHome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Home"
+                android:layout_marginTop="8dp"
+                android:onClick="onHomeButtonClick" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bottom_navigation_menu"
+        android:layout_marginTop="16dp"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

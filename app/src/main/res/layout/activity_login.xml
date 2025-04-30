@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <!-- Adding a Spacer for Title Bar, creating space between title and form -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="24dp" /> <!-- Space between title and form -->
+
+    <!-- Username Input Field -->
+    <EditText
+        android:id="@+id/etLoginUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:inputType="text"
+        android:padding="16dp"
+        android:layout_marginTop="16dp" />
+
+    <!-- Password Input Field -->
+    <EditText
+        android:id="@+id/etLoginPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="16dp"
+        android:layout_marginTop="16dp" />
+
+    <!-- Login Button -->
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:padding="16dp"
+        android:layout_marginTop="32dp" />
+
+    <!-- Register Button -->
+    <Button
+        android:id="@+id/btnGoToRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register Here"
+        android:padding="16dp"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

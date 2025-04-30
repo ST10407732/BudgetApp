@@ -1,0 +1,13 @@
+<resources>
+    <!-- existing strings -->
+    <string name="app_name">Savora</string>
+    <string name="select_date">Select a date</string>
+    <string name="selected_date">Selected date: %1$d/%2$d/%3$d</string>
+
+    <!-- new strings for the Add Expense screen -->
+    <string name="select_payment_method">Select payment method</string>
+    <string name="enter_tags_comma_separated">Enter tags (comma-separated)</string>
+    <string name="optional_notes">Optional notes</string>
+    <string name="attach_receipt">Attach receipt</string>
+    <string name="capture_photo">Capture photo</string>
+</resources>
