@@ -36,9 +36,12 @@ class LoginActivity : AppCompatActivity() {
                     val user = db.userDao().getUser(username, password)
 
                     if (user != null) {
-                        // Launch DashboardActivity and pass the username
+                        // Fetch the userId from the User object
+                        val userId = user.id
+
+                        // Pass the userId to the next activity (DashboardActivity)
                         val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-                        intent.putExtra("USERNAME", username)  // Pass the username to DashboardActivity
+                        intent.putExtra("USER_ID", userId)  // Pass the userId
                         startActivity(intent)
                         finish()  // Close LoginActivity
                     } else {
@@ -55,6 +58,7 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter both username and password", Toast.LENGTH_SHORT).show()
             }
         }
+
 
         btnGoToRegister.setOnClickListener {
             val intent = Intent(this@LoginActivity, RegisterActivity::class.java)

@@ -13,7 +13,7 @@ import vcmsa.projects.budgettracker.util.Converters
 
 @Database(
     entities = [User::class, Category::class, Expense::class, Budget::class],
-    version = 3
+    version = 5
 )
 @TypeConverters(Converters::class)
 abstract class BudgetDatabase : RoomDatabase() {

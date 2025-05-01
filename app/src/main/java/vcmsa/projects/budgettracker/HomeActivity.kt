@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import vcmsa.projects.budgettracker.SetBudgetActivity
+
 
 class HomeActivity : AppCompatActivity() {
 
@@ -13,7 +15,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var btnAddExpense: Button
     private lateinit var btnViewExpenses: Button
     private lateinit var btnBudget: Button
-
+    private lateinit var btnInputIncome: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,11 +28,19 @@ class HomeActivity : AppCompatActivity() {
         btnCategories = findViewById(R.id.btnCategories)
         btnAddExpense = findViewById(R.id.btnAddExpense)
         btnViewExpenses = findViewById(R.id.btnViewExpenses)
+        btnInputIncome = findViewById(R.id.btnInputIncome)
+
 
         tvWelcome.text = "Welcome, $username 👋"
 
+
         btnCategories.setOnClickListener {
             startActivity(Intent(this, CategoryActivity::class.java))
+        }
+        btnInputIncome.setOnClickListener {
+            // Navigate to SetBudgetActivity to input the income
+            val intent = Intent(this, SetBudgetActivity::class.java)
+            startActivity(intent)
         }
 
         btnAddExpense.setOnClickListener {

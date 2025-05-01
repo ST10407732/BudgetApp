@@ -16,7 +16,6 @@ import java.util.*
 
 @Composable
 fun BudgetDescriptionScreen(viewModel: BudgetViewModel) {
-    // Collecting state from ViewModel
     val budget by viewModel.budget.collectAsState()
     val categories by viewModel.categories.collectAsState()
     val totalSpent by viewModel.totalSpent.collectAsState()
@@ -47,7 +46,13 @@ fun BudgetDescriptionScreen(viewModel: BudgetViewModel) {
         Text("Category Budgets", style = MaterialTheme.typography.titleMedium)
         LazyColumn {
             items(categories) { category ->
-                val spentForCategory = viewModel.getSpentForCategory(category.name)
+                // Correctly call the function from ViewModel
+                val spentForCategory by produceState(initialValue = 0.0, key1 = category.name) {
+                    // Trigger loading category spending in ViewModel
+                    viewModel.loadSpentForCategory(category.name)
+                    value = viewModel.categorySpent.value ?: 0.0
+                }
+
                 CategoryItem(
                     categoryName = category.name,
                     limit = budget?.categoryLimit?.get(category.name) ?: 0.0,
@@ -77,6 +82,66 @@ fun BudgetDescriptionScreen(viewModel: BudgetViewModel) {
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text("Add Event Budget")
+        }
+    }
+}
+
+@Composable
+fun AddEditCategoryScreen(
+    onSave: (String, Double, Boolean) -> Unit,
+    onCancel: () -> Unit
+) {
+    var categoryName by remember { mutableStateOf("") }
+    var categoryAmount by remember { mutableStateOf("") }
+    var rollover by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black) // Removed color resources
+            .padding(16.dp)
+    ) {
+        Text("Add Category", color = Color.White, style = MaterialTheme.typography.titleLarge)
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = categoryName,
+            onValueChange = { categoryName = it },
+            label = { Text("Category Name", color = Color.White) }, // Removed color resource
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = categoryAmount,
+            onValueChange = { categoryAmount = it },
+            label = { Text("Monthly Budget", color = Color.White) }, // Removed color resource
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(
+                checked = rollover,
+                onCheckedChange = { rollover = it },
+                colors = CheckboxDefaults.colors(checkedColor = Color(0xFFFF9800)) // Directly use color
+            )
+            Text("Rollover unused budget", color = Color.White) // Removed color resource
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+            Button(onClick = onCancel, colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)) {
+                Text("Cancel", color = Color.White) // Removed color resource
+            }
+            Button(onClick = {
+                val amount = categoryAmount.toDoubleOrNull() ?: 0.0
+                onSave(categoryName, amount, rollover)
+            }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))) { // Direct color
+                Text("Add Category", color = Color.Black) // Removed color resource
+            }
         }
     }
 }

@@ -1,4 +1,3 @@
-// File: BudgetViewModelFactory.kt
 package vcmsa.projects.budgettracker.viewmodel
 
 import androidx.lifecycle.ViewModel
@@ -11,9 +10,14 @@ class BudgetViewModelFactory(
     private val budgetDao: BudgetDao,
     private val expenseDao: ExpenseDao,
     private val categoryDao: CategoryDao,
-    private val userId: Int
+    private val userId: Int // Add the userId parameter here
 ) : ViewModelProvider.Factory {
+
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return BudgetViewModel(budgetDao, expenseDao, categoryDao, userId) as T
+        return if (modelClass.isAssignableFrom(BudgetViewModel::class.java)) {
+            BudgetViewModel(budgetDao, expenseDao, categoryDao, userId) as T
+        } else {
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
     }
 }

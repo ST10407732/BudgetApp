@@ -10,6 +10,8 @@ import android.widget.TextView
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
+
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -20,6 +22,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import vcmsa.projects.budgettracker.database.BudgetDatabase
+import vcmsa.projects.budgettracker.viewmodel.BudgetViewModelFactory
+import vcmsa.projects.budgettracker.viewmodel.BudgetViewModel
 import vcmsa.projects.budgettracker.database.ExpenseDao
 import vcmsa.projects.budgettracker.model.ExpenseWithCategory
 import android.content.res.ColorStateList
@@ -39,10 +43,22 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var tvSpent: TextView
     private lateinit var tvRemaining: TextView
     private lateinit var tvProjected: TextView
+    private var userId: Int = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
+
+        userId = intent.getIntExtra("USER_ID", 0)
+
+        val db = BudgetDatabase.getDatabase(applicationContext)
+        val budgetDao = db.budgetDao()
+        val expenseDao = db.expenseDao()
+        val categoryDao = db.categoryDao()
+
+        val factory = BudgetViewModelFactory(budgetDao, expenseDao, categoryDao, userId)
+        val viewModel = ViewModelProvider(this, factory).get(BudgetViewModel::class.java)
 
 
         // Initialize the PieChart and Buttons

@@ -14,7 +14,12 @@
         android:textSize="24sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-
+    <Button
+        android:id="@+id/btnInputIncome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Budget"
+        android:layout_gravity="center" />
     <Button
         android:id="@+id/btnCategories"
         android:text="Manage Categories"
@@ -41,13 +46,13 @@
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/btnBudget"
-        android:text="View Budget"
-        android:textColor="#000000"
-        android:background="#FFA500"
-        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="View Budget Summary"
+        android:layout_marginTop="16dp" />
+
 
 </LinearLayout>

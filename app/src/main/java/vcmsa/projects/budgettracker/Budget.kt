@@ -12,5 +12,6 @@ data class Budget(
     val monthlyGoal: Double,
     val categoryLimit: Map<String, Double>,
     val rolloverAmount: Double = 0.0,
-    val eventBudgets: Map<String, Double> = emptyMap()
+    val eventBudgets: Map<String, Double> = emptyMap(),
+
 )

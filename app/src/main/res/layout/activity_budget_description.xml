@@ -1,88 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    tools:context=".BudgetDescriptionActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <!-- Total Budget and Rollover Amount TextViews -->
+    <TextView
+        android:id="@+id/tvTotalBudget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Budget: R0.00"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="16dp" />
 
-        <!-- Budget Summary -->
-        <TextView
-            android:id="@+id/tvTotalBudget"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Total Budget: $0.0"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:paddingBottom="8dp" />
+    <TextView
+        android:id="@+id/tvRolloverAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rollover Amount: R0.00"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvTotalBudget"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="16dp" />
 
-        <!-- Rollover Amount -->
-        <TextView
-            android:id="@+id/tvRolloverAmount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rollover Amount: $0.0"
-            android:textSize="16sp"
-            android:paddingBottom="16dp" />
+    <!-- Category Name Input -->
+    <EditText
+        android:id="@+id/etCategoryName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Category Name"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@id/tvRolloverAmount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:padding="16dp" />
 
-        <!-- Categories Label -->
-        <TextView
-            android:id="@+id/labelCategories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Categories"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:labelFor="@id/rvCategories"
-            android:paddingBottom="8dp" />
+    <!-- Monthly Budget Amount Input -->
+    <EditText
+        android:id="@+id/etBudgetAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Monthly Budget Amount (R)"
+        android:inputType="numberDecimal"
+        app:layout_constraintTop_toBottomOf="@id/etCategoryName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:padding="16dp" />
 
-        <!-- Categories RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCategories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="List of budget categories"
-            android:minHeight="100dp"
-            android:layout_marginBottom="16dp" />
 
-        <!-- Event Budgets Label -->
-        <TextView
-            android:id="@+id/labelEventBudgets"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Event Budgets"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:labelFor="@id/rvEventBudgets"
-            android:paddingBottom="8dp" />
+    <!-- Rollover Checkbox -->
+    <CheckBox
+        android:id="@+id/cbRollover"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rollover"
+        app:layout_constraintTop_toBottomOf="@id/etBudgetAmount"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp" />
 
-        <!-- Event Budgets RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvEventBudgets"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="List of special event budgets"
-            android:minHeight="100dp"
-            android:layout_marginBottom="24dp" />
+    <!-- Special Event Checkbox -->
+    <CheckBox
+        android:id="@+id/cbSpecialEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Special Event"
+        app:layout_constraintTop_toBottomOf="@id/cbRollover"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp" />
 
-        <!-- Add Category Button -->
-        <Button
-            android:id="@+id/btnAddCategory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add Category"
-            android:onClick="onAddCategoryClicked"
-            android:layout_marginBottom="12dp" />
+    <!-- Add Category Button -->
+    <Button
+        android:id="@+id/btnAddCategory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Add Category"
+        app:layout_constraintTop_toBottomOf="@id/cbSpecialEvent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:padding="16dp" />
 
-        <!-- Adjust Budget Button -->
-        <Button
-            android:id="@+id/btnAdjustBudget"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Adjust Budget"
-            android:onClick="onAdjustBudgetClicked" />
-    </LinearLayout>
-</ScrollView>
+    <!-- Categories RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCategories"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/btnAddCategory"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="16dp"
+        android:padding="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

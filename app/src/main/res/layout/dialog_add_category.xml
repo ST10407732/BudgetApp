@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- EditText for Category Name -->
+    <EditText
+        android:id="@+id/etCategoryName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Category Name"
+        android:inputType="text"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- EditText for Monthly Budget -->
+    <EditText
+        android:id="@+id/etMonthlyBudget"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Monthly Budget Amount (R)"
+        android:inputType="numberDecimal"
+        app:layout_constraintTop_toBottomOf="@id/etCategoryName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <!-- CheckBox for Rollover -->
+    <CheckBox
+        android:id="@+id/cbRollover"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rollover"
+        app:layout_constraintTop_toBottomOf="@id/etMonthlyBudget"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Button Layout for Add/Cancel -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        app:layout_constraintTop_toBottomOf="@id/cbRollover"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp">
+
+        <!-- Add Button -->
+        <Button
+            android:id="@+id/btnAddCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:onClick="onAddCategoryClicked"/>
+
+        <!-- Cancel Button -->
+        <Button
+            android:id="@+id/btnCancelCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:onClick="onCancelAddCategoryClicked"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

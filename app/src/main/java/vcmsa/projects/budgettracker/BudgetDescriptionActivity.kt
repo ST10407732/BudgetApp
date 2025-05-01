@@ -1,75 +1,102 @@
 package vcmsa.projects.budgettracker
 
 import android.os.Bundle
-import android.view.View
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
+import vcmsa.projects.budgettracker.database.BudgetDatabase
+import vcmsa.projects.budgettracker.model.Category
 import vcmsa.projects.budgettracker.viewmodel.BudgetViewModel
 import vcmsa.projects.budgettracker.viewmodel.BudgetViewModelFactory
-import vcmsa.projects.budgettracker.database.BudgetDatabase
-import vcmsa.projects.budgettracker.CategoryAdapter
-import vcmsa.projects.budgettracker.EventBudgetAdapter
 
 class BudgetDescriptionActivity : AppCompatActivity() {
 
     private lateinit var budgetViewModel: BudgetViewModel
     private lateinit var categoryAdapter: CategoryAdapter
-    private lateinit var eventBudgetAdapter: EventBudgetAdapter
+    private val categoryList = mutableListOf<Category>()
+
+    private lateinit var etCategoryName: EditText
+    private lateinit var etBudgetAmount: EditText
+    private lateinit var cbRollover: CheckBox
+    private lateinit var cbSpecialEvent: CheckBox
+    private lateinit var btnAddCategory: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_budget_description)
 
-        // Replace with your logic to get the user ID
-        val userId = 1 // TODO: Replace with actual user logic or pass via Intent
+        // Setup input fields
+        etCategoryName = findViewById(R.id.etCategoryName)
+        etBudgetAmount = findViewById(R.id.etBudgetAmount)
+        cbRollover = findViewById(R.id.cbRollover)
+        cbSpecialEvent = findViewById(R.id.cbSpecialEvent)
+        btnAddCategory = findViewById(R.id.btnAddCategory)
 
-        // Get DAO instances from your Room database
+        val userId = intent.getIntExtra("USER_ID", 0)
+
+        // Room database + DAO
         val db = BudgetDatabase.getDatabase(this)
-        val budgetDao = db.budgetDao()
-        val expenseDao = db.expenseDao()
-        val categoryDao = db.categoryDao()
-
-        // Create ViewModel with factory
-        val factory = BudgetViewModelFactory(budgetDao, expenseDao, categoryDao, userId)
+        val factory = BudgetViewModelFactory(db.budgetDao(), db.expenseDao(), db.categoryDao(), userId)
         budgetViewModel = ViewModelProvider(this, factory)[BudgetViewModel::class.java]
 
-        // Set up RecyclerViews
-        val categoriesRecyclerView: RecyclerView = findViewById(R.id.rvCategories)
-        categoriesRecyclerView.layoutManager = LinearLayoutManager(this)
+        // Setup RecyclerView
+        val recyclerView = findViewById<RecyclerView>(R.id.rvCategories)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        categoryAdapter = CategoryAdapter(this, categoryList)
+        recyclerView.adapter = categoryAdapter
 
-        val eventBudgetsRecyclerView: RecyclerView = findViewById(R.id.rvEventBudgets)
-        eventBudgetsRecyclerView.layoutManager = LinearLayoutManager(this)
+        // Load all categories
+        loadCategories()
 
-        // Observe flows using lifecycleScope
-        lifecycleScope.launch {
-            budgetViewModel.categories.collect { categories ->
-                categoryAdapter = CategoryAdapter(categories)
-                categoriesRecyclerView.adapter = categoryAdapter
-            }
-        }
-
+        // Observe budget info
         lifecycleScope.launch {
             budgetViewModel.budget.collect { budget ->
                 budget?.let {
-                    findViewById<TextView>(R.id.tvTotalBudget).text = "Total Budget: $${it.monthlyGoal}"
-                    findViewById<TextView>(R.id.tvRolloverAmount).text = "Rollover Amount: $${it.rolloverAmount}"
-                    eventBudgetAdapter = EventBudgetAdapter(it.eventBudgets)
-                    eventBudgetsRecyclerView.adapter = eventBudgetAdapter
+                    findViewById<TextView>(R.id.tvTotalBudget).text = "Total Budget: R${it.monthlyGoal}"
+                    findViewById<TextView>(R.id.tvRolloverAmount).text = "Rollover Amount: R${it.rolloverAmount}"
                 }
+            }
+        }
+
+        // Add category button
+        btnAddCategory.setOnClickListener {
+            val name = etCategoryName.text.toString().trim()
+            val amount = etBudgetAmount.text.toString().toDoubleOrNull()
+
+            if (name.isBlank() || amount == null) {
+                Toast.makeText(this, "Please enter valid name and amount", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val newCategory = Category(
+                name = name,
+                monthlyBudget = amount,
+                rollover = cbRollover.isChecked,
+                isSpecialEvent = cbSpecialEvent.isChecked,
+                userId = userId
+            )
+
+            lifecycleScope.launch {
+                db.categoryDao().insertCategory(newCategory)
+                loadCategories()
+                etCategoryName.text.clear()
+                etBudgetAmount.text.clear()
+                cbRollover.isChecked = false
+                cbSpecialEvent.isChecked = false
             }
         }
     }
 
-    fun onAddCategoryClicked(view: View) {
-        // Handle Add Category action (you can open a new dialog or activity)
-    }
-
-    fun onAdjustBudgetClicked(view: View) {
-        // Handle Adjust Budget action (you can open a dialog or activity)
+    private fun loadCategories() {
+        lifecycleScope.launch {
+            val categories = budgetViewModel.getCategories()
+            categoryList.clear()
+            categoryList.addAll(categories)
+            categoryAdapter.notifyDataSetChanged()
+        }
     }
 }

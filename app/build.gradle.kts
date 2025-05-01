@@ -55,6 +55,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation("androidx.compose.material3:material3:<latest-version>")
+
     implementation(libs.androidx.appcompat)
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
