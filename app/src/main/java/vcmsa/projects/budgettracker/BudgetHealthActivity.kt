@@ -42,9 +42,10 @@ class BudgetHealthActivity : AppCompatActivity() {
         statusTextView = findViewById(R.id.statusTextView)
 
         setupBudgetHealth()
-        setupHorizontalBarChart()
+        //setupHorizontalBarChart()
         setupBottomNavigation()
     }
+
 
     private fun setupBudgetHealth() {
         lifecycleScope.launch(Dispatchers.IO) {
@@ -73,61 +74,53 @@ class BudgetHealthActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupHorizontalBarChart() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val expenseDao = BudgetDatabase.getDatabase(applicationContext).expenseDao()
-            val expensesWithCategories = expenseDao.getAllExpensesWithCategoryLive().value ?: emptyList()
+    private fun setupHorizontalBarChart(totalSpent: Double, remainingBudget: Double, projectedOverspend: Double) {
+        val barChart = findViewById<HorizontalBarChart>(R.id.horizontalBarChart)
 
+        val entries = listOf(
+            BarEntry(0f, totalSpent.toFloat()),
+            BarEntry(1f, remainingBudget.toFloat()),
+            BarEntry(2f, projectedOverspend.toFloat())
+        )
 
-            val categoryTotals = mutableMapOf<String, Float>()
-            for (expenseWithCategory in expensesWithCategories) {
-                val categoryName = expenseWithCategory.category.name
-                val amount = expenseWithCategory.expense.amount.toFloat()
-                categoryTotals[categoryName] = categoryTotals.getOrDefault(categoryName, 0f) + amount
-            }
-
-            val entries = mutableListOf<BarEntry>()
-            val labels = mutableListOf<String>()
-            categoryTotals.entries.forEachIndexed { index, (category, totalAmount) ->
-                entries.add(BarEntry(index.toFloat(), totalAmount))
-                labels.add(category)
-            }
-
-            val barDataSet = BarDataSet(entries, "Expenses").apply {
-                colors = listOf(
-                    Color.parseColor("#FFA500"), // Orange
-                    Color.parseColor("#FF6347"), // Tomato
-                    Color.parseColor("#87CEEB")  // Sky Blue
-                )
-                valueTextColor = Color.WHITE
-                valueTextSize = 12f
-            }
-
-            val barData = BarData(barDataSet)
-
-            withContext(Dispatchers.Main) {
-                horizontalBarChart.data = barData
-                horizontalBarChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-                horizontalBarChart.xAxis.textColor = Color.WHITE
-                horizontalBarChart.axisLeft.textColor = Color.WHITE
-                horizontalBarChart.axisRight.textColor = Color.WHITE
-                horizontalBarChart.legend.textColor = Color.WHITE
-                horizontalBarChart.description.isEnabled = false
-                horizontalBarChart.invalidate()
-            }
+        val dataSet = BarDataSet(entries, "Budget Overview").apply {
+            colors = listOf(
+                Color.parseColor("#FFA500"), // Orange
+                Color.parseColor("#87CEEB"), // Light Blue
+                Color.parseColor("#FF6347")  // Red
+            )
+            valueTextColor = Color.WHITE
+            valueTextSize = 12f
         }
+
+        val data = BarData(dataSet)
+
+        barChart.data = data
+        barChart.setFitBars(true)
+        barChart.description.isEnabled = false
+        barChart.xAxis.valueFormatter = IndexAxisValueFormatter(listOf("Spent", "Remaining", "Projected"))
+        barChart.xAxis.granularity = 1f
+        barChart.xAxis.setDrawGridLines(false)
+        barChart.axisLeft.setDrawGridLines(false)
+        barChart.axisRight.isEnabled = false
+        barChart.legend.isEnabled = false
+        barChart.animateY(1000)
+        barChart.invalidate()
     }
+
+
 
     private fun setupBottomNavigation() {
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottomNavigation)
-        bottomNavigation.selectedItemId = R.id.nav_budget_health
+       // bottomNavigation.selectedItemId = R.id.nav_budget_health
+      //  bottomNavigation.selectedItemId = R.id.nav_profile
 
         bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> startActivity(Intent(this, HomeActivity::class.java))
                 R.id.nav_dashboard -> startActivity(Intent(this, DashboardActivity::class.java))
                 R.id.nav_add_expense -> startActivity(Intent(this, AddExpenseActivity::class.java))
-                R.id.nav_budget_health -> return@setOnItemSelectedListener true
+               // R.id.nav_budget_health -> return@setOnItemSelectedListener true
                 R.id.nav_view_expenses -> startActivity(Intent(this, ExpensesListActivity::class.java))
             }
             true

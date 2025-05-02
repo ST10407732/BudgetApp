@@ -40,14 +40,15 @@
             android:textSize="14sp"
             android:textColor="@android:color/black" />
 
-        <!-- Date -->
+
+        <!-- End Date -->
         <TextView
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Date"
-            android:textSize="12sp"
-            android:textColor="@android:color/darker_gray" />
+            android:textSize="14sp"
+            android:textColor="@android:color/black" />
 
         <!-- Payment Method -->
         <TextView

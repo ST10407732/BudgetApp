@@ -10,6 +10,5 @@ data class ExpenseWithCategory(
         parentColumn = "categoryId",
         entityColumn = "id"
     )
-    val category: Category
+    val category: Category // This will now be fetched using categoryId
 )
-

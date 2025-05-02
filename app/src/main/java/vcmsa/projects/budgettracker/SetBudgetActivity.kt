@@ -8,12 +8,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import vcmsa.projects.budgettracker.database.BudgetDatabase
 import vcmsa.projects.budgettracker.model.Budget
-import vcmsa.projects.budgettracker.model.Category
-import vcmsa.projects.budgettracker.R
-
 import vcmsa.projects.budgettracker.viewmodel.BudgetViewModel
 import vcmsa.projects.budgettracker.viewmodel.BudgetViewModelFactory
 
@@ -23,29 +19,29 @@ class SetBudgetActivity : AppCompatActivity() {
     private lateinit var btnSaveBudget: Button
     private lateinit var tvMessage: TextView
 
-    // Assuming you retrieve the user ID from a session or login
-    val userId = intent.getIntExtra("USER_ID", 0)
-
-    // Use the ViewModel with factory
-    private val budgetViewModel: BudgetViewModel by viewModels {
-        BudgetViewModelFactory(
-            budgetDao = BudgetDatabase.getDatabase(application).budgetDao(),
-            expenseDao = BudgetDatabase.getDatabase(application).expenseDao(),
-            categoryDao = BudgetDatabase.getDatabase(application).categoryDao(),
-            userId = userId // Pass userId here
-        )
-    }
+    private lateinit var budgetViewModel: BudgetViewModel
+    private var userId: Int = 0  // Declare, but don't assign here
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_budget)
+
+        // Get USER_ID from intent safely here
+        userId = intent.getIntExtra("USER_ID", 0)
+
+        // Initialize ViewModel inside onCreate with correct userId
+        budgetViewModel = BudgetViewModelFactory(
+            budgetDao = BudgetDatabase.getDatabase(application).budgetDao(),
+            expenseDao = BudgetDatabase.getDatabase(application).expenseDao(),
+            categoryDao = BudgetDatabase.getDatabase(application).categoryDao(),
+            userId = userId
+        ).create(BudgetViewModel::class.java)
 
         // Initialize views
         etBudget = findViewById(R.id.etBudget)
         btnSaveBudget = findViewById(R.id.btnSaveBudget)
         tvMessage = findViewById(R.id.tvMessage)
 
-        // Set up click listener to save budget
         btnSaveBudget.setOnClickListener {
             val budgetInput = etBudget.text.toString()
 
@@ -56,21 +52,14 @@ class SetBudgetActivity : AppCompatActivity() {
 
             val budgetAmount = budgetInput.toDoubleOrNull()
             if (budgetAmount != null && budgetAmount > 0) {
-                // Save the budget to the ViewModel/Database
                 val budget = Budget(
                     userId = userId,
                     monthlyGoal = budgetAmount,
-                    categoryLimit = emptyMap()  // Pass an empty map if no categories are defined
+                    categoryLimit = emptyMap()
                 )
-
-                // Call ViewModel to save the budget
                 budgetViewModel.saveBudget(budget)
 
-                // Show a success message
-                tvMessage.text = "Budget saved successfully!"
                 Toast.makeText(this, "Budget saved!", Toast.LENGTH_SHORT).show()
-
-                // Optionally, go back to the previous screen
                 finish()
             } else {
                 tvMessage.text = "Please enter a valid positive budget amount."

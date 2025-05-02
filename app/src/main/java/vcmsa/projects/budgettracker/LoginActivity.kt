@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import vcmsa.projects.budgettracker.database.BudgetDatabase
+import vcmsa.projects.budgettracker.util.SessionManager
 
 class LoginActivity : AppCompatActivity() {
 
@@ -16,6 +17,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var etPassword: EditText
     private lateinit var btnLogin: Button
     private lateinit var btnGoToRegister: Button
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,14 +38,15 @@ class LoginActivity : AppCompatActivity() {
                     val user = db.userDao().getUser(username, password)
 
                     if (user != null) {
-                        // Fetch the userId from the User object
-                        val userId = user.id
+                        // Save userId to session
+                        val sessionManager = SessionManager(applicationContext)
+                        sessionManager.saveUserId(user.id)
 
-                        // Pass the userId to the next activity (DashboardActivity)
+                        // Navigate to Dashboard with userId
                         val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-                        intent.putExtra("USER_ID", userId)  // Pass the userId
+                        intent.putExtra("USER_ID", user.id)
                         startActivity(intent)
-                        finish()  // Close LoginActivity
+                        finish()
                     } else {
                         runOnUiThread {
                             Toast.makeText(
@@ -58,7 +61,6 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter both username and password", Toast.LENGTH_SHORT).show()
             }
         }
-
 
         btnGoToRegister.setOnClickListener {
             val intent = Intent(this@LoginActivity, RegisterActivity::class.java)

@@ -18,9 +18,11 @@ import java.util.*
 class ExpenseAdapter : ListAdapter<ExpenseWithCategory, ExpenseAdapter.ExpenseViewHolder>(ExpenseDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_expense, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_expense, parent, false) // Make sure item_expense.xml exists
         return ExpenseViewHolder(view)
     }
+
 
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
         val item = getItem(position)

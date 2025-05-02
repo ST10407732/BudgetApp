@@ -45,6 +45,9 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var tvProjected: TextView
     private var userId: Int = 0
 
+    private lateinit var progressBar: ProgressBar
+    private lateinit var statusTextView: TextView
+    private lateinit var tvLevelStatus: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,49 +62,23 @@ class DashboardActivity : AppCompatActivity() {
 
         val factory = BudgetViewModelFactory(budgetDao, expenseDao, categoryDao, userId)
         val viewModel = ViewModelProvider(this, factory).get(BudgetViewModel::class.java)
+        statusTextView = findViewById(R.id.statusTextView)
 
+        tvLevelStatus = findViewById(R.id.tvLevelStatus)
 
         // Initialize the PieChart and Buttons
         pieChart = findViewById(R.id.pieChart)
-        btnAddExpense = findViewById(R.id.btnAddExpense)
-        btnViewExpenses = findViewById(R.id.btnViewExpenses)
-        btnHome = findViewById(R.id.btnHome)
         tvSpent = findViewById(R.id.tvSpent)
         tvRemaining = findViewById(R.id.tvRemaining)
         tvProjected = findViewById(R.id.tvProjected)
-
+        progressBar = findViewById(R.id.budgetHealthProgressBar)
         // Setup the PieChart and Budget Health
         setupPieChart()
         setupBottomNavigation()
 
+        setupBudgetHealth()
 
-        // Set OnClickListeners for the buttons
-        btnAddExpense.setOnClickListener {
-            // Navigate to Add Expense Screen
-            val intent = Intent(this, AddExpenseActivity::class.java)
-            startActivity(intent)
-        }
-
-        btnViewExpenses.setOnClickListener {
-            // Navigate to View Expenses Screen
-            val intent = Intent(this, ExpensesListActivity::class.java)
-            startActivity(intent)
-        }
-
-        // Set OnClickListener for the Home Button
-        btnHome.setOnClickListener {
-            // Pass the username to HomeActivity
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-        }
     }
-
-    fun onHomeButtonClick(view: View) {
-        // Navigate to HomeActivity
-        val intent = Intent(this, HomeActivity::class.java)
-        startActivity(intent)
-    }
-
     private fun setupPieChart() {
         lifecycleScope.launch(Dispatchers.Main) {
             val expenseDao = BudgetDatabase.getDatabase(applicationContext).expenseDao()
@@ -117,17 +94,17 @@ class DashboardActivity : AppCompatActivity() {
                     totalSpent += amount
                 }
 
-                // PIE CHART SETUP
+                // Pie Chart setup
                 val entries = categoryMap.map { (category, totalAmount) ->
                     PieEntry(totalAmount, category)
                 }
 
                 val dataSet = PieDataSet(entries, "Expenses").apply {
                     colors = listOf(
-                        Color.parseColor("#FFA500"), // Orange
-                        Color.parseColor("#FFFFFF"), // White
-                        Color.parseColor("#FF6347"), // Tomato
-                        Color.parseColor("#87CEEB")  // Sky Blue
+                        Color.parseColor("#FFA500"),
+                        Color.parseColor("#FFFFFF"),
+                        Color.parseColor("#FF6347"),
+                        Color.parseColor("#87CEEB")
                     )
                     setSliceSpace(3f)
                     setSelectionShift(5f)
@@ -150,7 +127,6 @@ class DashboardActivity : AppCompatActivity() {
 
                     addLegend(categoryMap)
 
-                    // Use a static budget or fetch one dynamically later
                     val budgetLimit = 5000f
                     val remaining = budgetLimit - totalSpent
                     val projected = if (remaining < 0) -remaining else 0f
@@ -160,10 +136,36 @@ class DashboardActivity : AppCompatActivity() {
                     tvSpent.text = "R%.2f".format(totalSpent)
                     tvRemaining.text = "R%.2f".format(remaining)
                     tvProjected.text = "R%.2f".format(projected)
+
+                    // 💡 Gamification: Level Calculation
+                    val savings = if (remaining > 0) remaining else 0f
+                    val savingsRate = if (totalSpent == 0f) 100f else (savings / totalSpent) * 100f
+
+                    var level = "Bronze"
+                    var progress = 25
+
+                    when {
+                        savingsRate >= 100f -> {
+                            level = "Platinum"
+                            progress = 100
+                        }
+                        savingsRate >= 50f -> {
+                            level = "Gold"
+                            progress = 75
+                        }
+                        savingsRate >= 25f -> {
+                            level = "Silver"
+                            progress = 50
+                        }
+                    }
+
+                    progressBar.progress = progress
+                    tvLevelStatus.text = "Level: $level (${"%.0f".format(savingsRate)}% Savings Rate)"
                 }
             }
         }
     }
+
 
 
 
@@ -248,6 +250,32 @@ class DashboardActivity : AppCompatActivity() {
         barChart.invalidate()
     }
 
+    private fun setupBudgetHealth() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val expenseDao = BudgetDatabase.getDatabase(applicationContext).expenseDao()
+            val totalSpent = expenseDao.getTotalExpensesAmount()
+            val monthlyBudget = 5000f // Static budget or fetch dynamically
+
+            val spentPercentage = (totalSpent / monthlyBudget) * 100
+
+            withContext(Dispatchers.Main) {
+                tvSpent.text = "Spent: R${String.format("%.2f", totalSpent)}"
+                tvRemaining.text = "Remaining: R${String.format("%.2f", monthlyBudget - totalSpent)}"
+
+                if (totalSpent > monthlyBudget) {
+                    tvProjected.text = "Projected Overspending: R${String.format("%.2f", totalSpent - monthlyBudget)}"
+                    statusTextView.text = "Budget Status: Overspending!"
+                    progressBar.progressTintList = ColorStateList.valueOf(Color.RED)
+                } else {
+                    tvProjected.text = "Projected Overspending: R0"
+                    statusTextView.text = "Budget Status: Healthy"
+                    progressBar.progressTintList = ColorStateList.valueOf(Color.parseColor("#00FF00"))
+                }
+
+                progressBar.progress = spentPercentage.toInt().coerceAtMost(100)
+            }
+        }
+    }
     private fun setupBottomNavigation() {
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         bottomNavigation.selectedItemId = R.id.nav_dashboard
@@ -257,7 +285,7 @@ class DashboardActivity : AppCompatActivity() {
                 R.id.nav_home -> startActivity(Intent(this, HomeActivity::class.java))
                 R.id.nav_dashboard -> return@setOnItemSelectedListener true
                 R.id.nav_add_expense -> startActivity(Intent(this, AddExpenseActivity::class.java))
-                R.id.nav_budget_health -> startActivity(Intent(this, BudgetHealthActivity::class.java))
+               // R.id.nav_budget_health -> startActivity(Intent(this, BudgetHealthActivity::class.java))
                 R.id.nav_view_expenses -> startActivity(Intent(this, ExpensesListActivity::class.java))
             }
             true
@@ -265,5 +293,4 @@ class DashboardActivity : AppCompatActivity() {
     }
 
 
-    }
-
+}

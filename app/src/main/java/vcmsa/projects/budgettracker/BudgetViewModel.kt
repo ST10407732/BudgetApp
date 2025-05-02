@@ -10,11 +10,9 @@ import vcmsa.projects.budgettracker.database.CategoryDao
 import vcmsa.projects.budgettracker.database.ExpenseDao
 import vcmsa.projects.budgettracker.model.Budget
 import vcmsa.projects.budgettracker.model.Category
-import androidx.lifecycle.LiveData
-
+import kotlinx.coroutines.flow.Flow
 
 class BudgetViewModel(
-
     private val budgetDao: BudgetDao,
     private val expenseDao: ExpenseDao,
     private val categoryDao: CategoryDao,
@@ -33,10 +31,14 @@ class BudgetViewModel(
     private val _categorySpent = MutableStateFlow<Double?>(null)
     val categorySpent: StateFlow<Double?> get() = _categorySpent
 
+    private val _remainingBudget = MutableStateFlow<Double?>(null)
+    val remainingBudget: StateFlow<Double?> get() = _remainingBudget
+
     init {
         loadBudget()
         loadCategories()
         calculateTotalSpent()
+        calculateRemainingBudget()
     }
 
     private fun loadBudget() {
@@ -45,15 +47,29 @@ class BudgetViewModel(
         }
     }
 
+    private fun calculateRemainingBudget() {
+        viewModelScope.launch {
+            val budgetAmount = budgetDao.getBudgetByUser(userId)?.monthlyGoal ?: 0.0
+            val spentAmount = expenseDao.getTotalSpent(userId) ?: 0.0
+            _remainingBudget.value = budgetAmount - spentAmount
+        }
+    }
+
     private fun loadCategories() {
         viewModelScope.launch {
             _categories.value = categoryDao.getAllCategories()
         }
     }
-    // Make getCategories a suspend function
+
     suspend fun getCategories(): List<Category> {
-        // Fetch categories for the specific userId from your database
         return categoryDao.getCategoriesForUser(userId)
+    }
+    fun getBudgetForUser(userId: Int): Flow<Budget?> {
+        return budgetDao.getBudgetForUser(userId)
+    }
+
+    fun getTotalSpent(): Flow<Double> {
+        return expenseDao.getTotalSpentFlow(userId)
     }
 
 
@@ -62,19 +78,15 @@ class BudgetViewModel(
             _totalSpent.value = expenseDao.getTotalSpent(userId) ?: 0.0
         }
     }
-    // Save the budget
+
     fun saveBudget(budget: Budget) {
         viewModelScope.launch {
             budgetDao.insert(budget)
+            _budget.value = budget
+            calculateRemainingBudget()
         }
     }
 
-    // Get the current budget (optional if you want to show it on the screen)
-    fun getBudget(): LiveData<Budget> {
-        return budgetDao.getBudget(userId)
-    }
-
-    //  Safe coroutine-based way to get category spending
     fun loadSpentForCategory(categoryName: String) {
         viewModelScope.launch {
             _categorySpent.value = expenseDao.getSpentForCategory(userId, categoryName)

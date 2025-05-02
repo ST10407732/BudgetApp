@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import vcmsa.projects.budgettracker.model.Budget
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BudgetDao {
@@ -18,6 +19,9 @@ interface BudgetDao {
 
     @Query("SELECT * FROM budgets WHERE userId = :userId LIMIT 1")
     fun getBudget(userId: Int): LiveData<Budget>  // Use the correct table name "budgets"
+
+    @Query("SELECT * FROM budgets WHERE userId = :userId LIMIT 1")
+    fun getBudgetForUser(userId: Int): Flow<Budget?>
 
     @Update
     suspend fun update(budget: Budget)

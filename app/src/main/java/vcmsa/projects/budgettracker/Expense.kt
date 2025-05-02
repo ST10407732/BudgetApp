@@ -11,6 +11,8 @@ data class Expense(
     val userId: Int,                        // ✅ newly added
     val amount: Double,
     val date: Long,
+    val startTime: Long?,
+    val endTime: Long?,
     val description: String,
     val categoryId: Int,
     val paymentMethod: String,
@@ -18,7 +20,8 @@ data class Expense(
     val longitude: Double?,
     val tags: String?,
     val notes: String?,
-    val receiptPhoto: String? = null,
+    val receiptPhoto: String? ,
+
 
     val category: String,  // Make sure this field exists and matches the query
 

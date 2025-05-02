@@ -9,11 +9,14 @@ import vcmsa.projects.budgettracker.model.Budget
 import vcmsa.projects.budgettracker.model.Category
 import vcmsa.projects.budgettracker.model.Expense
 import vcmsa.projects.budgettracker.model.User
+import vcmsa.projects.budgettracker.model.UserProfile
 import vcmsa.projects.budgettracker.util.Converters
+import vcmsa.projects.budgettracker.dao.UserProfileDao
+
 
 @Database(
-    entities = [User::class, Category::class, Expense::class, Budget::class],
-    version = 5
+    entities = [User::class, Category::class, Expense::class, Budget::class,UserProfile::class],
+    version = 11
 )
 @TypeConverters(Converters::class)
 abstract class BudgetDatabase : RoomDatabase() {
@@ -22,6 +25,8 @@ abstract class BudgetDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun expenseDao(): ExpenseDao
     abstract fun budgetDao(): BudgetDao
+    abstract fun userProfileDao(): UserProfileDao
+
 
     companion object {
         @Volatile

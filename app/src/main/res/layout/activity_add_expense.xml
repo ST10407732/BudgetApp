@@ -51,6 +51,27 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:padding="8dp" />
+        <Button
+            android:id="@+id/btnSelectStartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Start Date" />
+
+        <TextView
+            android:id="@+id/tvStartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnSelectEndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select End Date" />
+
+        <TextView
+            android:id="@+id/tvEndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <!-- Tags -->
         <EditText

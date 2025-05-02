@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
+    android:fitsSystemWindows="true"
     tools:context=".DashboardActivity">
 
     <!-- ScrollView -->
@@ -16,15 +17,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
-        android:layout_marginBottom="56dp">
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation">
 
-        <!-- Inner LinearLayout inside ScrollView -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:paddingBottom="100dp"> <!-- extra space for nav bar -->
 
             <!-- Title -->
             <TextView
@@ -35,7 +35,7 @@
                 android:textColor="#FFA500"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:layout_margin="16dp"/>
+                android:layout_margin="16dp" />
 
             <!-- Budget Health Section -->
             <LinearLayout
@@ -44,33 +44,42 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp">
+                <TextView
+                    android:id="@+id/tvBudgetAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Remaining Budget"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/white"
+                    android:layout_marginTop="16dp"
+                    android:layout_gravity="center_horizontal" />
 
                 <TextView
                     android:id="@+id/tvSpent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Spent: $0"
+                    android:text="Spent: R0"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="8dp" />
 
                 <TextView
                     android:id="@+id/tvRemaining"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Remaining: $0"
+                    android:text="Remaining: R0"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="8dp" />
 
                 <TextView
                     android:id="@+id/tvProjected"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Projected Overspending: $0"
+                    android:text="Projected Overspending: R0"
                     android:textColor="#FFA500"
                     android:textSize="18sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="8dp" />
 
                 <ProgressBar
                     android:id="@+id/budgetHealthProgressBar"
@@ -88,8 +97,7 @@
                     android:text="Budget Status: Healthy"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
-                    android:layout_marginTop="8dp"/>
-
+                    android:layout_marginTop="8dp" />
             </LinearLayout>
 
             <!-- Horizontal Bar Chart -->
@@ -99,16 +107,14 @@
                 android:layout_height="250dp"
                 android:layout_marginTop="16dp" />
 
-            <!-- Horizontal Bar Legend -->
+            <!-- Bar Legend -->
             <LinearLayout
                 android:id="@+id/barChartLegend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginTop="8dp">
-                <!-- Add colored boxes and labels dynamically from code -->
-            </LinearLayout>
+                android:layout_marginTop="8dp" />
 
             <!-- Pie Chart -->
             <com.github.mikephil.charting.charts.PieChart
@@ -117,7 +123,7 @@
                 android:layout_height="250dp"
                 android:layout_marginTop="16dp" />
 
-            <!-- Pie Chart Legend -->
+            <!-- Pie Legend -->
             <LinearLayout
                 android:id="@+id/legendLayout"
                 android:layout_width="match_parent"
@@ -125,32 +131,38 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:paddingTop="16dp"
-                android:paddingBottom="16dp">
-                <!-- Add legends dynamically -->
-            </LinearLayout>
+                android:paddingBottom="16dp" />
+
+            <ProgressBar
+                android:id="@+id/progressLevel"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:progress="0"
+                android:max="100"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:progressTint="#FFA500"
+                android:backgroundTint="#444444" />
+
+            <TextView
+                android:id="@+id/tvLevelStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Level Status"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"/>
 
             <!-- Buttons -->
             <Button
-                android:id="@+id/btnAddExpense"
-                android:layout_width="wrap_content"
+                android:id="@+id/btnBudgetHealth"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Add Expense"
-                android:layout_marginTop="16dp" />
-
-            <Button
-                android:id="@+id/btnViewExpenses"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="View Expenses"
-                android:layout_marginTop="8dp" />
-
-            <Button
-                android:id="@+id/btnHome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home"
-                android:layout_marginTop="8dp"
-                android:onClick="onHomeButtonClick" />
+                android:text="View Budget Health"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/purple_500"
+                android:textColor="@android:color/white"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -158,13 +170,13 @@
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
         app:menu="@menu/bottom_navigation_menu"
-        android:layout_marginTop="16dp"
         android:background="?android:attr/windowBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:labelVisibilityMode="labeled" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

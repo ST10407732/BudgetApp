@@ -60,6 +60,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-core:2.6.2")
 
     implementation(libs.material)
     implementation(libs.androidx.activity)

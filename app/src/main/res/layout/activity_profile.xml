@@ -1,0 +1,80 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Profile Info TextViews -->
+        <TextView android:id="@+id/tvUserName"
+            android:text="Full Name"
+            android:textSize="18sp"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView android:id="@+id/tvAchievementLevel"
+            android:text="Achievement Level"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView android:id="@+id/tvMembershipDetails"
+            android:text="Membership Details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView android:id="@+id/tvTotalBalance"
+            android:text="Total Balance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView android:id="@+id/tvTotalDebt"
+            android:text="Total Debt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView android:id="@+id/tvMonthlyIncome"
+            android:text="Monthly Income"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView android:id="@+id/tvMonthlyExpenses"
+            android:text="Monthly Expenses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView android:id="@+id/tvNetWorth"
+            android:text="Net Worth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Profile Buttons -->
+        <Button android:id="@+id/btnAddProfile"
+            android:text="Add Profile"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button android:id="@+id/btnEditProfile"
+            android:text="Edit Profile"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button android:id="@+id/btnGenerateReport"
+            android:text="Generate Report"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button android:id="@+id/btnLinkBankAccount"
+            android:text="Link Bank Account"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>
